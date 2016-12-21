@@ -1,0 +1,33 @@
+---
+# tasks file self-hosted RHV installation
+
+- name: Subscribe to the RHV host repo
+  command: subscription-manager repos --enable={{ item }}
+  with_items: rhel-7-server-rhv-4-mgmt-agent-rpms
+
+- name: Open firewall ports for RHV
+  command: firewall-cmd --add-port={{ item }} --permanent
+  with_items:
+    - 22/tcp
+    - 2223/tcp
+    - 161/udp
+    - 5900-6923/tcp
+    - 5989/udp
+    - 9090/tcp
+    - 16514/tcp
+    - 49152-49216/tcp
+    - 54321/tcp
+
+- name: Reload firewall rules
+  command: firewall-cmd --reload
+
+- name: Install RHV packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - ovirt-hosted-engine-setup
+    - rhevm-appliance
+
+
+

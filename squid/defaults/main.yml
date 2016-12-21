@@ -1,0 +1,3 @@
+---
+# you do not have to change if no special reason
+squid_conf_src_path: files/squid/squid.conf

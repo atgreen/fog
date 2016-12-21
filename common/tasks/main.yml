@@ -1,0 +1,30 @@
+---
+# tasks file for common
+
+- name: Install common packages
+  yum: name={{ default_packages }} state=present
+
+- name: configure selinux to {{ selinux }}
+  selinux:
+    policy: targeted
+    state: "{{ selinux }}"
+
+- name: copy motd file
+  copy: src=motd dest=/etc/motd
+
+- name: disable kdump
+  service: name=kdump state=stopped enabled=no
+  ignore_errors: yes
+
+- name: install chronyd service
+  yum: name={{ item }} state=present
+  with_items:
+   - chrony
+   - ntpdate
+  notify: restart chronyd
+  when: chronyd
+
+- name: configure chronyd
+  copy: src=chrony.conf dest=/etc/chrony.conf
+  notify: restart chronyd
+  when: chronyd

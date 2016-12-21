@@ -1,0 +1,27 @@
+---
+# tasks file for subscribing to RHN
+
+- name: Configure subscription-manager to use squid proxy
+  command: subscription-manager config --server.proxy_hostname=10.0.0.1 --server.proxy_port=3128
+#  when: subscription_manager_use_web_proxy == 'yes'
+
+- name: Register on RHN
+  redhat_subscription:
+    state: present
+    force_register: yes
+    username: "{{ redhat_rhn_username }}"
+    password: "{{ redhat_rhn_password }}"
+#    pool: {{ redhat_subscription_pool }}
+# FIXME: Specifying the pool above doesn't seem to work.
+
+- name: Attach to a Red Hat subscription
+  command: subscription-manager attach --pool={{ redhat_subscription_pool }}
+
+- name: Unsubscribe from all repos
+  command: subscription-manager repos --disable="*"
+
+- name: Subscribe to the right repos
+  command: subscription-manager repos --enable=rhel-7-server-rpms
+
+
+

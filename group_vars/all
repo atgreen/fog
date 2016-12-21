@@ -1,0 +1,11 @@
+redhat_rhn_username: XXXXXXXXXX
+redhat_rhn_password: XXXXXXXXXX
+redhat_subscription_pool: XXXXXXXXXXXX
+
+greenfield_domain: XXXXXXXXXXXXX
+greenfield_realm: XXXXXXXXXXXXX
+
+bootstrap_password: XXXXXXXXX
+
+subscription_manager_use_web_proxy: yes
+

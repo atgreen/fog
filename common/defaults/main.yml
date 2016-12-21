@@ -1,0 +1,13 @@
+---
+# defaults file for common
+
+chronyd: true
+selinux: enforcing
+
+##### PACKAGES #####
+default_packages:
+  - tcpdump
+  - tree
+  - mlocate
+  - vim
+  - wget

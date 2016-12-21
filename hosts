@@ -1,0 +1,4 @@
+[bootstrap-rhv]
+10.0.0.2 ansible_ssh_user=root ansible_ssh_pass={{ bootstrap_password }} ansible_ssh_extra_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' redhat_subscription_pool=XXXXXXXXXX
+
+

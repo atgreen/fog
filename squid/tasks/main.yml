@@ -1,0 +1,21 @@
+---
+- name: install squid
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ squid_packages }}"
+
+- name: setup the squid config
+  copy:
+    src: "{{ squid_conf_src_path }}"
+    dest: /etc/squid/squid.conf
+    owner: root
+    group: root
+    mode: 0640
+  notify: reload squid
+
+- name: start squid
+  service:
+    name: squid
+    state: started
+    enabled: yes

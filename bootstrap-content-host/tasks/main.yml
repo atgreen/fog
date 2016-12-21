@@ -1,0 +1,40 @@
+---
+# tasks file for bootstrap-content-host
+
+- name: Install NFS server
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - nfs-utils
+    - rpcbind
+
+- name: Make the /export directory
+  file: path=/export state=directory owner=36 group=36 mode=0775 recurse=yes
+
+- name: Install NFS export file
+  copy: src=rhv.exports dest=/etc/exports.d/rhv.exports
+
+- name: Start and enable NFS
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - nfs
+    - rpcbind
+
+- name: Open firewall ports for IdM and http
+  firewalld: service={{ item }} permanent=true state=enabled
+  with_items:
+    - nfs
+    - http
+  notify: reload firewalld
+  
+- name: Make the /var/www/html/pub directory
+  file: path=/var/www/html/pub state=directory owner=root group=root mode=0755 recurse=yes
+
+- name: Install web content
+  copy: src=rhv1.ks dest=/var/www/html/pub/rhv1.ks
+
+

@@ -1,0 +1,35 @@
+---
+# tasks file self-hosted RHV installation
+
+- name: Subscribe to the RHV host repo
+  command: subscription-manager repos --enable={{ item }}
+  with_items: rhel-7-server-rhv-4-mgmt-agent-rpms
+
+- name: Install IdM packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - ipa-server
+    - ipa-server-dns
+
+- name: Update /etc/hosts with this host
+  copy: src=hosts dest=/etc/hosts
+
+- name: Configure IdM
+  command: ipa-server-install -U --hostname=devbox.{{ greenfield_domain }} --domain={{ greenfield_domain }} --realm={{ greenfield_realm }} --no-ntp -a {{ bootstrap_password }} -p {{ bootstrap_password }} --mkhomedir --setup-dns --ssh-trust-dns --forwarder=8.8.8.8 --allow-zone-overlap --ip-address 192.168.1.2 --no-host-dns creates=/etc/ipa/default.conf
+
+- name: Open firewall ports for IdM
+  firewalld: service={{ item }} permanent=true state=enabled
+  with_items:
+    - https
+    - ldaps
+    - kerberos
+    - kpasswd
+    - dns
+    - ntp
+  notify: reload firewalld
+
+- name: Populate DNS with bootstrap servers
+  shell: (echo {{ bootstrap_password }} | kinit admin) && ipa dnsrecord-add {{ greenfield_domain }} rhv1 --a-rec 10.0.0.2 && ipa dnsrecord-add {{ greenfield_domain }} rhvm --a-rec 10.0.0.3
+

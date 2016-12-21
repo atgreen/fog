@@ -1,0 +1,17 @@
+---
+# tasks file for httpd
+
+- name: Install httpd
+  yum: name=httpd state=present
+
+- name: Start and enable httpd
+  service: name=httpd state=started enabled=yes
+
+- name: Open http port
+  command: firewall-cmd --add-service=http --permanent
+
+- name: Reload firewall rules
+  command: firewall-cmd --reload
+
+#  firewalld: service=http state=enabled permanent=true
+

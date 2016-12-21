@@ -1,0 +1,6 @@
+- hosts: bootstrap-rhv
+  roles:
+    - bootstrap-repos
+    - common
+    - bootstrap-rhv-host
+

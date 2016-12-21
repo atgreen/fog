@@ -1,0 +1,2 @@
+/export 10.0.0.*(rw,anonuid=36,anongid=36,all_squash)
+

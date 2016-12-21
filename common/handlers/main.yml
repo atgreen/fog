@@ -1,0 +1,6 @@
+---
+# handlers file for common
+
+- name: restart chronyd
+  service: name=chronyd state=restarted enabled=yes
+
