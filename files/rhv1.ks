@@ -40,7 +40,7 @@ firstboot --disable
 
 zerombr
 clearpart --all --initlabel
-part /boot --fstype ext3 --size 128 
+part /boot --fstype ext3 --size 1024
 part / --fstype xfs --grow
 part /home --fstype xfs --size 4096
 part swap --recommended 
